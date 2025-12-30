@@ -1,0 +1,11 @@
+[phases.setup]
+nixPkgs = ["go"]
+
+[phases.build]
+cmds = [
+  "cd lucky-money/backend",
+  "go build -o app ./cmd/api"
+]
+
+[start]
+cmd = "cd lucky-money/backend && ./app"
