@@ -28,8 +28,8 @@ func main() {
 		httpadapter.DefaultCORS(),
 	)
 
-	adminUser := getEnv("ADMIN_USERNAME", "adminlixi")
-	adminPass := getEnv("ADMIN_PASSWORD", "khoideptrai123@")
+	adminUser := getEnv("ADMIN_USERNAME", "")
+	adminPass := getEnv("ADMIN_PASSWORD", "")
 
 	mem := store.NewMemoryStore()
 

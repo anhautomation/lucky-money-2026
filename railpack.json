@@ -1,9 +1,0 @@
-{
-  "language": "golang",
-  "build": {
-    "command": "cd backend && go build -o app ./cmd/api"
-  },
-  "start": {
-    "command": "cd backend && ./app"
-  }
-}
