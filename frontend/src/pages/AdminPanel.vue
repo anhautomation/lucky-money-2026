@@ -12,17 +12,14 @@ import {
   setSession,
 } from '../api'
 
-// ===== AUTH =====
 const loggedIn = ref(!!localStorage.getItem('admin_session'))
-const username = ref('admin')
+const username = ref('')
 const password = ref('')
 const loading = ref(false)
 const error = ref('')
 
-// ===== UI STATE =====
-const activeTab = ref('ids') // ids | pool | claims
+const activeTab = ref('ids')
 
-// ===== DATA =====
 const userIDs = ref([])
 const claimHistory = ref([])
 
@@ -30,8 +27,6 @@ const DENOMS = [50, 100, 200, 500]
 const currentPool = ref(DENOMS.map(a => ({ amount: a, qty: 0 })))
 const editPool = ref(DENOMS.map(a => ({ amount: a, qty: 0 })))
 
-// ===== COMPUTED =====
-// tập các mã đã rút
 const drawnSet = computed(() => {
   const s = new Set()
   claimHistory.value.forEach(c => {
@@ -40,7 +35,6 @@ const drawnSet = computed(() => {
   return s
 })
 
-// ===== UTILS =====
 function randomHex16() {
   return [...crypto.getRandomValues(new Uint8Array(8))]
     .map(b => b.toString(16).padStart(2, '0'))
@@ -154,7 +148,7 @@ onMounted(() => {
   <div class="min-h-screen bg-red-600 flex items-center justify-center px-4">
 
     <div v-if="!loggedIn" class="bg-yellow-50 p-6 rounded-xl w-full max-w-sm">
-      <h1 class="text-xl font-bold text-center mb-4">Lucky Money Admin</h1>
+      <h1 class="text-xl font-bold text-center mb-4">Admin Panel</h1>
       <input v-model="username" class="border p-2 w-full mb-3" placeholder="Username" />
       <input v-model="password" type="password" class="border p-2 w-full mb-3" placeholder="Password" />
       <button @click="login" class="bg-red-600 text-white w-full py-2 rounded">

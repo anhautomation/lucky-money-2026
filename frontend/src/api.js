@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8080'
+const API_BASE = import.meta.env.VITE_API_BASE || 'https://lucky-money-2026-production.up.railway.app'
 
 let adminSession = localStorage.getItem('admin_session') || ''
 
@@ -15,7 +15,6 @@ function headers(isAdmin = false) {
   return h
 }
 
-// ===== ADMIN =====
 export async function adminLogin(user, pass) {
   const res = await fetch(`${API_BASE}/admin/login`, {
     method: 'POST',
