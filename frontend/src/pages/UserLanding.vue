@@ -14,7 +14,7 @@ async function submit() {
   loading.value = true
 
   try {
-    const res = await fetch('http://localhost:8080/user/submit', {
+    const res = await fetch('https://lucky-money-2026-production.up.railway.app/user/submit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
