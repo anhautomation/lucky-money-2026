@@ -146,6 +146,7 @@ onMounted(() => {
 
 <template>
   <div class="admin-page">
+    <div class = "admin-panel">
   <div class="min-h-screen flex items-center justify-center px-4">
 
     <div v-if="!loggedIn" class="bg-yellow-50 p-6 rounded-xl w-full max-w-sm">
@@ -210,13 +211,13 @@ onMounted(() => {
                   v-if="drawnSet.has(id)"
                   class="text-red-600 font-semibold"
                 >
-                  Đã kích hoạt
+                  Đã sử dụng
                 </span>
                 <span
                   v-else
                   class="text-green-600 font-semibold"
                 >
-                  Chưa kích hoạt
+                  Chưa sử dụng
                 </span>
               </td>
               <td class="border text-center">
@@ -304,6 +305,7 @@ onMounted(() => {
     </div>
   </div>
   </div>
+  </div>
 </template>
 <style scoped>
 .admin-page {
@@ -312,9 +314,33 @@ onMounted(() => {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-
   display: flex;
-  align-items: center;
-  justify-content: center;
+  justify-content: center;   
+  align-items: flex-start;
+  padding: 40px 16px;
 }
+
+.admin-panel {
+  width: 100%;
+  max-width: 860px;
+}
+
+.admin-header,
+.admin-tabs {
+  flex-shrink: 0;
+}
+
+.admin-content {
+  overflow-y: auto;
+  padding: 16px;
+}
+
+.admin-content::-webkit-scrollbar {
+  width: 8px;
+}
+.admin-content::-webkit-scrollbar-thumb {
+  background: #d97706;
+  border-radius: 4px;
+}
+
 </style>
