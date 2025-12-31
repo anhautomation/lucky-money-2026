@@ -187,6 +187,9 @@ function launchFireworks(duration = 6000) {
   display: flex;
   justify-content: center;
   align-items: center;
+  background-position: top center; 
+  background-size: contain;       
+  background-color: #8b0000;
 }
 
 .card {
