@@ -153,7 +153,7 @@ function launchFireworks(duration = 6000) {
       </button>
 
       <div v-if="showResultText" class="result">
-        <p class="result-money">🎉 Bạn nhận được {{ amount }}.000₫ 🎉</p>
+        <p class="result-money">🎉 Chúc mừng bạn nhận được lì xì {{ amount }}.000₫ 🎉</p>
         <p class="result-text">
           ✨ <b>Kết sổ 2025 – Say Hi 2026</b><br />
           BQT FAM chúc bạn một năm Ngọ chạy thật nhanh để gặt nhiều thành công,
