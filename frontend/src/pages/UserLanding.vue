@@ -11,6 +11,7 @@ const error = ref('')
 const loading = ref(false)
 
 const isOpening = ref(false)
+const showMoneyFly = ref(false)
 
 async function submit() {
   result.value = ''

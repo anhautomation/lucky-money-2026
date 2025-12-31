@@ -158,7 +158,19 @@ onMounted(() => {
       <p v-if="error" class="text-center text-sm text-red-600 mt-2">{{ error }}</p>
     </div>
 
-    <div v-else class="bg-yellow-50 p-6 rounded-xl w-full max-w-5xl space-y-5">
+    <div
+      v-else
+      class="
+        bg-yellow-50
+        p-4 sm:p-5 md:p-6
+        rounded-xl
+        shadow-xl
+        space-y-5
+        w-full
+        max-w-[860px]
+        mx-auto
+      "
+    >
 
       <div class="flex justify-between items-center">
         <h1 class="text-xl font-bold">Admin Panel</h1>
