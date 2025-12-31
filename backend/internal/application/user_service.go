@@ -1,6 +1,7 @@
 package application
 
 import (
+	"strings"
 	"time"
 
 	"lucky-money/internal/domain/luckymoney"
@@ -15,17 +16,25 @@ type UserService struct {
 	lock   port.Locker
 }
 
-func NewUserService(issued port.IssuedIDRepo, users port.UserRepo, pool port.PoolRepo, claims port.ClaimRepo) *UserService {
+func NewUserService(
+	issued port.IssuedIDRepo,
+	users port.UserRepo,
+	pool port.PoolRepo,
+	claims port.ClaimRepo,
+) *UserService {
 	return &UserService{
 		issued: issued,
 		users:  users,
 		pool:   pool,
 		claims: claims,
-		lock:   nil,
 	}
 }
 
-func (s *UserService) Register(id, name, phone string) error {
+func (s *UserService) Register(id, account, bank, bankno, fullname string) error {
+	if strings.TrimSpace(id) == "" {
+		return luckymoney.ErrIDNotIssued
+	}
+
 	if !s.issued.IsIssued(id) {
 		return luckymoney.ErrIDNotIssued
 	}
@@ -39,8 +48,10 @@ func (s *UserService) Register(id, name, phone string) error {
 		u = &luckymoney.User{ID: id}
 	}
 
-	u.AccountName = name
-	u.Phone = phone
+	u.Account = account
+	u.Bank = bank
+	u.BankNo = bankno
+	u.FullName = fullname
 	u.Registered = true
 	u.HasDrawn = false
 	u.Amount = 0
@@ -49,29 +60,42 @@ func (s *UserService) Register(id, name, phone string) error {
 	return s.users.Save(u)
 }
 
-func (s *UserService) SubmitAndDraw(id, name, phone string) (int, error) {
-	return s.submitAndDrawNoLock(id, name, phone)
+func (s *UserService) SubmitAndDraw(id, account, bank, bankno, fullname string) (int, error) {
+	if strings.TrimSpace(id) == "" {
+		return 0, luckymoney.ErrIDNotIssued
+	}
+	return s.submitAndDrawNoLock(id, account, bank, bankno, fullname)
 }
 
-func (s *UserService) submitAndDrawNoLock(id, name, phone string) (int, error) {
+func (s *UserService) submitAndDrawNoLock(id, account, bank, bankno, fullname string) (int, error) {
+	if strings.TrimSpace(id) == "" {
+		return 0, luckymoney.ErrIDNotIssued
+	}
+
+	if !s.issued.IsIssued(id) {
+		return 0, luckymoney.ErrIDNotIssued
+	}
+
 	u, ok := s.users.GetByID(id)
 	if !ok {
 		u = &luckymoney.User{ID: id}
 	}
 
 	if !u.Registered {
-		u.AccountName = name
-		u.Phone = phone
+		u.Account = account
+		u.Bank = bank
+		u.BankNo = bankno
+		u.FullName = fullname
 		u.Registered = true
 		_ = s.users.Save(u)
 	} else {
-		if u.AccountName != name || u.Phone != phone {
+		if u.Account != account || u.FullName != fullname {
 			return 0, luckymoney.ErrInfoMismatch
 		}
 	}
 
 	if u.HasDrawn {
-		return u.Amount, luckymoney.ErrAlreadyDrawn
+		return 0, luckymoney.ErrAlreadyDrawn
 	}
 
 	amount, okDraw := s.pool.DrawOne()
@@ -85,11 +109,13 @@ func (s *UserService) submitAndDrawNoLock(id, name, phone string) (int, error) {
 	_ = s.users.Save(u)
 
 	_ = s.claims.AppendClaim(luckymoney.Claim{
-		ID:          u.ID,
-		AccountName: u.AccountName,
-		Phone:       u.Phone,
-		Amount:      amount,
-		Time:        u.DrawTime,
+		ID:       u.ID,
+		Account:  u.Account,
+		Bank:     u.Bank,
+		BankNo:   u.BankNo,
+		FullName: u.FullName,
+		Amount:   amount,
+		Time:     u.DrawTime,
 	})
 
 	return amount, nil

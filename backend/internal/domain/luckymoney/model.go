@@ -3,10 +3,12 @@ package luckymoney
 import "time"
 
 type User struct {
-	ID          string
-	AccountName string
-	Phone       string
-	Registered  bool
+	ID         string
+	Account    string
+	Bank       string
+	BankNo     string
+	FullName   string
+	Registered bool
 
 	HasDrawn bool
 	Amount   int
@@ -19,9 +21,11 @@ type PoolItem struct {
 }
 
 type Claim struct {
-	ID          string    `json:"id"`
-	AccountName string    `json:"account_name"`
-	Phone       string    `json:"phone"`
-	Amount      int       `json:"amount"`
-	Time        time.Time `json:"time"`
+	ID       string    `json:"id"`
+	Account  string    `json:"account"`
+	Bank     string    `json:"bank"`
+	BankNo   string    `json:"bankno"`
+	FullName string    `json:"name"`
+	Amount   int       `json:"amount"`
+	Time     time.Time `json:"time"`
 }

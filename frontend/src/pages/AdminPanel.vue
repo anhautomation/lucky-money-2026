@@ -131,9 +131,9 @@ async function savePool() {
   try {
     await createPool(editPool.value)
     currentPool.value = editPool.value.map(i => ({ ...i }))
-    alert('Đã lưu pool')
+    alert('Đã cập nhật danh sách lì xì hiện tại')
   } catch {
-    alert('Lỗi lưu pool')
+    alert('Lỗi cập nhật lì xì')
   } finally {
     loading.value = false
   }
@@ -145,7 +145,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-red-600 flex items-center justify-center px-4">
+  <div class="admin-page">
+  <div class="min-h-screen flex items-center justify-center px-4">
 
     <div v-if="!loggedIn" class="bg-yellow-50 p-6 rounded-xl w-full max-w-sm">
       <h1 class="text-xl font-bold text-center mb-4">Admin Panel</h1>
@@ -257,20 +258,24 @@ onMounted(() => {
           <thead class="bg-gray-100">
             <tr>
               <th class="border px-2 py-1">Mã</th>
+              <th class="border px-2 py-1">Tên ingame</th>
               <th class="border px-2 py-1">Tên ngân hàng</th>
               <th class="border px-2 py-1">Số tài khoản</th>
               <th class="border px-2 py-1">Tiền</th>
+              <th class="border px-2 py-1">Họ và tên</th>
               <th class="border px-2 py-1">Thời gian</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="c in claimHistory" :key="c.time">
               <td class="border px-2 py-1 font-mono text-xs">{{ c.id }}</td>
-              <td class="border px-2 py-1">{{ c.account_name }}</td>
-              <td class="border px-2 py-1">{{ c.phone }}</td>
+              <td class="border px-2 py-1">{{ c.account }}</td>
+              <td class="border px-2 py-1">{{ c.bank }}</td>
+              <td class="border px-2 py-1">{{ c.bankno }}</td>
               <td class="border px-2 py-1 text-red-600 font-bold">
                 {{ c.amount }}.000₫
               </td>
+              <td class="border px-2 py-1">{{ c.name }}</td>
               <td class="border px-2 py-1 text-xs">
                 {{ new Date(c.time).toLocaleString() }}
               </td>
@@ -286,4 +291,18 @@ onMounted(() => {
 
     </div>
   </div>
+  </div>
 </template>
+<style scoped>
+.admin-page {
+  min-height: 100vh;
+  background-image: url('/4261727762388106724.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+</style>

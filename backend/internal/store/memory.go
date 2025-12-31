@@ -35,8 +35,10 @@ func loadDatabase() database {
 		Users: map[string]*luckymoney.User{
 			// "298e50bed4ddd674": {
 			// 	ID:          "298e50bed4ddd674",
-			// 	AccountName: "Nguyen Van A",
-			// 	Phone:       "0909123456",
+			// 	Account: "Nguyen Van A",
+			// 	Bank:       "0909123456",
+			// 	BankNo:       "0909123456",
+			// 	FullName:       "0909123456",
 			// 	HasDrawn:    true,
 			// 	Amount:      100,
 			// 	DrawTime:    t1,
@@ -47,8 +49,10 @@ func loadDatabase() database {
 		Claims: []luckymoney.Claim{
 			// {
 			// 	ID:          "298e50bed4ddd674",
-			// 	AccountName: "Nguyen Van A",
-			// 	Phone:       "0909123456",
+			// 	Account: "Nguyen Van A",
+			// 	Bank:       "0909123456",
+			// 	BankNo:       "0909123456",
+			// 	FullName:       "0909123456",
 			// 	Amount:      100,
 			// 	Time:        t1,
 			// },

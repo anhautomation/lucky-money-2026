@@ -79,6 +79,7 @@ func AdminGetClaims(svc *application.AdminService) gin.HandlerFunc {
 		c.JSON(http.StatusOK, gin.H{"items": svc.GetClaims()})
 	}
 }
+
 func AdminListIDs(svc *application.AdminService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ids := svc.ListIssuedIDs()
