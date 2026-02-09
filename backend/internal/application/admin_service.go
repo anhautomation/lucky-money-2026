@@ -48,9 +48,7 @@ func (s *AdminService) Login(user, pass string) (string, error) {
 }
 
 func (s *AdminService) Logout(token string) error {
-	if !s.sessions.IsValidSession(token) {
-		return luckymoney.ErrUnauthorized
-	}
+	_ = token
 	return s.sessions.ClearSession()
 }
 
@@ -79,9 +77,13 @@ func (s *AdminService) ListIssuedIDs() []string {
 }
 
 func (s *AdminService) DeleteIssuedID(id string) error {
-	u, ok := s.users.GetByID(id)
-	if ok && u.HasDrawn {
-		return luckymoney.ErrIDAlreadyDrawn
+	if l, ok := s.issued.(port.Locker); ok && l != nil {
+		var err error
+		l.WithLock(func() {
+			err = s.issued.DeleteIssued(id)
+		})
+		return err
 	}
+
 	return s.issued.DeleteIssued(id)
 }

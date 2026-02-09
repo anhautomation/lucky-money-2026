@@ -11,4 +11,5 @@ var (
 	ErrIDAlreadyDrawn    = errors.New("id already drawn")
 	ErrAlreadyDrawn      = errors.New("already drawn")
 	ErrPoolEmpty         = errors.New("pool empty")
+	ErrDrawTimeout       = errors.New("draw timeout")
 )

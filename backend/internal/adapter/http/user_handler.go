@@ -38,6 +38,10 @@ func UserRegister(svc *application.UserService) gin.HandlerFunc {
 			c.JSON(404, gin.H{"error": "mã không tồn tại"})
 		case luckymoney.ErrAlreadyRegistered:
 			c.JSON(409, gin.H{"error": "mã này đã được sử dụng"})
+		case luckymoney.ErrDrawTimeout:
+			c.JSON(409, gin.H{
+				"error": "Bao lì xì của bạn đã có người khác rút, vui lòng rút lại",
+			})
 		default:
 			c.JSON(400, gin.H{"error": "mã này có vấn đề ! liên hệ admin"})
 		}
@@ -80,6 +84,10 @@ func UserSubmitAndDraw(svc *application.UserService) gin.HandlerFunc {
 			c.JSON(409, gin.H{"error": "mã này đã được sử dụng"})
 		case luckymoney.ErrPoolEmpty:
 			c.JSON(400, gin.H{"error": "không còn lì xì"})
+		case luckymoney.ErrDrawTimeout:
+			c.JSON(409, gin.H{
+				"error": "Bao lì xì của bạn đã có người khác rút, vui lòng rút lại",
+			})
 		default:
 			c.JSON(400, gin.H{"error": "có lỗi rút lì xì ! liên hệ admin"})
 		}

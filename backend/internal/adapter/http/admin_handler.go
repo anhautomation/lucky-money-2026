@@ -9,6 +9,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func requireAdminSession(c *gin.Context, svc *application.AdminService) bool {
+	token := c.GetHeader("X-Admin-Session")
+	if token == "" || !svc.IsSessionValid(token) {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "chưa đăng nhập"})
+		return false
+	}
+	return true
+}
+
 func AdminLogin(svc *application.AdminService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var req struct {
@@ -32,7 +41,7 @@ func AdminLogout(svc *application.AdminService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.GetHeader("X-Admin-Session")
 		if err := svc.Logout(token); err != nil {
-			c.JSON(401, gin.H{"error": "chưa đăng nhập"})
+			c.JSON(500, gin.H{"error": "logout thất bại"})
 			return
 		}
 		c.JSON(200, gin.H{"ok": true})
@@ -41,6 +50,10 @@ func AdminLogout(svc *application.AdminService) gin.HandlerFunc {
 
 func AdminSetPool(svc *application.AdminService) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		if !requireAdminSession(c, svc) {
+			return
+		}
+
 		var req struct {
 			Items []luckymoney.PoolItem `json:"items"`
 		}
@@ -48,13 +61,20 @@ func AdminSetPool(svc *application.AdminService) gin.HandlerFunc {
 			c.JSON(400, gin.H{"error": "thất bại"})
 			return
 		}
-		_ = svc.SetPool(req.Items)
+
+		if err := svc.SetPool(req.Items); err != nil {
+			c.JSON(500, gin.H{"error": "set pool thất bại"})
+			return
+		}
 		c.JSON(200, gin.H{"ok": true})
 	}
 }
 
 func AdminGetPool(svc *application.AdminService) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		if !requireAdminSession(c, svc) {
+			return
+		}
 		items := svc.GetPool()
 		c.JSON(200, gin.H{"items": items})
 	}
@@ -62,6 +82,10 @@ func AdminGetPool(svc *application.AdminService) gin.HandlerFunc {
 
 func AdminIssueIDs(svc *application.AdminService) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		if !requireAdminSession(c, svc) {
+			return
+		}
+
 		var req struct {
 			IDs []string `json:"ids"`
 		}
@@ -69,19 +93,29 @@ func AdminIssueIDs(svc *application.AdminService) gin.HandlerFunc {
 			c.JSON(400, gin.H{"error": "thất bại"})
 			return
 		}
-		_ = svc.IssueIDs(req.IDs)
+
+		if err := svc.IssueIDs(req.IDs); err != nil {
+			c.JSON(500, gin.H{"error": "issue ids thất bại"})
+			return
+		}
 		c.JSON(200, gin.H{"ok": true})
 	}
 }
 
 func AdminGetClaims(svc *application.AdminService) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		if !requireAdminSession(c, svc) {
+			return
+		}
 		c.JSON(http.StatusOK, gin.H{"items": svc.GetClaims()})
 	}
 }
 
 func AdminListIDs(svc *application.AdminService) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		if !requireAdminSession(c, svc) {
+			return
+		}
 		ids := svc.ListIssuedIDs()
 		c.JSON(200, gin.H{"items": ids})
 	}
@@ -89,6 +123,10 @@ func AdminListIDs(svc *application.AdminService) gin.HandlerFunc {
 
 func AdminDeleteID(svc *application.AdminService) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		if !requireAdminSession(c, svc) {
+			return
+		}
+
 		id := c.Param("id")
 		if id == "" {
 			c.JSON(400, gin.H{"error": "không có mã này"})
@@ -97,9 +135,7 @@ func AdminDeleteID(svc *application.AdminService) gin.HandlerFunc {
 
 		err := svc.DeleteIssuedID(id)
 		if err == luckymoney.ErrIDAlreadyDrawn {
-			c.JSON(409, gin.H{
-				"error": "mã này đã được kích hoạt",
-			})
+			c.JSON(409, gin.H{"error": "mã này đã được kích hoạt"})
 			return
 		}
 		if err != nil {
